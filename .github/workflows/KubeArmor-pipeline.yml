@@ -7,6 +7,7 @@ on:
     branches:
       - main
 
+<<<<<<< HEAD
 # Set environment variables
 env:
   MONGODB_URI: ${{ secrets.MONGODB_URI }}
@@ -15,6 +16,8 @@ env:
   PASSWORD: ${{ secrets.PASSWORD }}
 
 # This is the workflow that is being run.
+=======
+>>>>>>> 54e21368ff691aa1f7349889f2b21db815b26382
 jobs:
   build-test-and-deploy:
     # This is telling GitHub to run the workflow on the latest version of Ubuntu.
@@ -114,6 +117,7 @@ jobs:
     if: ${{ github.event.inputs.infrastructure-audit == 'yes' }}
     
     steps:
+<<<<<<< HEAD
         - name: Checkout
           uses: actions/checkout@v3
     
@@ -172,3 +176,31 @@ jobs:
   #         path: |
   #           report_html.html
   #           report_json.json
+=======
+    # Step 1: Check out the code from the repository
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    # Step 2: Set up AWS credentials using secrets stored in GitHub
+    - name: Set up AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1 # Replace with your AWS region
+
+    # Step 3: Connect to EC2 instance via SSH and copy code
+    - name: Build & Deploy code on Ec2
+      env:
+          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          HOSTNAME: ${{secrets.HOST_NAME}}
+          USER_NAME: ${{secrets.USER_NAME}}
+      
+      run: |
+          echo "$PRIVATE_KEY" > private_key.pem && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USER_NAME}@${HOST_NAME}
+
+          # Now we have got the access of EC2 and we will start the deploy .
+          cd /home/ubuntu/ &&
+          sudo ls
+>>>>>>> 54e21368ff691aa1f7349889f2b21db815b26382
