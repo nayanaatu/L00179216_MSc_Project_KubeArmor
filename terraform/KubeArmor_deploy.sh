@@ -69,7 +69,7 @@ helm repo update
 helm install grafana grafana/grafana
 
 echo "Exposing Grafana service..."
-kubectl expose service grafana --type=NodePort --target-port=3000 --name=grafana-ext
+kubectl expose service grafana --type=NodePort --target-port=8080 --name=grafana-ext
 sleep 2 
 ## reload daemon
 sudo systemctl daemon-reload
@@ -87,7 +87,7 @@ kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-passwor
 # Step 9: Write locust file to generate load - Ec2 instance IP and port hardcode, make it variable an dread from
 #Ec2 instance to be considered in script enhancement
 echo "========= Kubearmor and all tools installed successfully =========="
-sudo systemctl status 
+sudo systemctl status kubearmor 
 echo "===== Deployment done successfully ============"
 #echo " === Generate load on nginx server running in Kubernetes cluster ==="
 #locust -f webpage.py --headless -u 15 -r 3 --run-time 30s --host="100.27.219.175:31903"
