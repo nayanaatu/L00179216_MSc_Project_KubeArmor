@@ -9,9 +9,6 @@ on:
   pull_request:
     branches: [ "main" ]
 
-permissions:
-  contents: read
-
 jobs:
   build:
 
@@ -31,17 +28,16 @@ jobs:
         aws-region: us-east-1 # Replace with your AWS region
 
     # Step 3: Connect to EC2 instance via SSH and copy code
-    - name: Copy code to EC2 instance
+    - name: Build & Deploy code on Ec2
       env:
-        EC2_PUBLIC_IP: ${{ secrets.EC2_PUBLIC_IP }}
-        SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          HOSTNAME: ${{secrets.EC2_PUBLIC_IP}}
+          USER_NAME: ${{secrets.USER_NAME}}
+      
       run: |
-        # Write the SSH private key to a temporary file
-        echo "$SSH_KEY" > private_key.pem
-        chmod 600 private_key.pem
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${EC2_PUBLIC_IP}
 
-        # Copy code to EC2 instance
-        scp -i private_key.pem -o "StrictHostKeyChecking=no" -r $GITHUB_WORKSPACE/* ec2-user@${EC2_PUBLIC_IP}:/home/ec2-user/app
-
-        # Clean up
-        rm private_key.pem
+          # Now we have got the access of EC2 and we will start the deploy .
+          cd /home/ubuntu/ &&
+          sudo ls
