@@ -1,5 +1,5 @@
 # The name of the workflow.
-name: Build, Test, and Deploy
+name: Build, Test, and Deploy code on Ec2 instance
 
 # Run the workflow when code is pushed to the main branch
 on:
@@ -7,17 +7,9 @@ on:
     branches:
       - main
 
-<<<<<<< HEAD
-# Set environment variables
-env:
-  MONGODB_URI: ${{ secrets.MONGODB_URI }}
-  TOKEN_KEY: ${{ secrets.TOKEN_KEY }}
-  EMAIL: ${{ secrets.EMAIL }}
-  PASSWORD: ${{ secrets.PASSWORD }}
 
 # This is the workflow that is being run.
-=======
->>>>>>> 54e21368ff691aa1f7349889f2b21db815b26382
+
 jobs:
   build-test-and-deploy:
     # This is telling GitHub to run the workflow on the latest version of Ubuntu.
@@ -26,55 +18,6 @@ jobs:
       # Checkout the code from the GitHub repository
       - name: Checkout code
         uses: actions/checkout@v2
-
-      # Install dependencies and run tests for the client application
-      # - name: Install frontend
-      #   working-directory: ./WWA-frontend-master
-      #   run: |
-      #     npm install
-
-      # # Install dependencies, export environment variables to be used by application and run tests for the server application
-      # - name: Install backend
-      #   working-directory: ./WWA-backend-master
-      #   run: |
-      #     npm install
-
-      # # Login to Docker Hub using credentials from repository secrets
-      # - name: Login to Docker Hub
-      #   uses: docker/login-action@v1
-      #   with:
-      #     username: ${{ secrets.DOCKER_USERNAME }}
-      #     password: ${{ secrets.DOCKER_PASSWORD }}
-
-      # # checking docker login status
-      # - name: Check docker login status
-      #   if: failure()
-      #   run: echo Docker login process failed.
-
-      # # removing old docker images
-      # - name: Deleting old docker images
-      #   run: |
-      #     docker rmi -f $(docker image ls -a -q)
-
-      # # Build a Docker image for the client application
-      # - name: Build Client Docker Image
-      #   working-directory: ./WWA-frontend-master
-      #   # Build image with tag pavanvarikolu/wwafrontend-client:latest
-      #   run: |
-      #     docker build -t pavanvarikolu/wwafrontend-client:latest .
-
-      # # Build a Docker image for the server application
-      # - name: Build Server Docker Image
-      #   working-directory: ./WWA-backend-master
-      #   # Build image with tag pavanvarikolu/wwabackend-server:latest
-      #   run: |
-      #     docker build -t pavanvarikolu/wwabackend-server:latest .
-
-      # # Push the Docker images to Docker Hub
-      # - name: Push Docker Images to Docker Hub
-      #   run: |
-      #     docker push pavanvarikolu/wwafrontend-client:latest || true
-      #     docker push pavanvarikolu/wwabackend-server:latest || true
 
   iac-build-and-deploy:
     runs-on: ubuntu-latest
@@ -103,51 +46,15 @@ jobs:
             terraform validate -no-color
         working-directory: terraform
           
-      - name: Terraform Plan
+      - name: Terraform Plan ro deploy AWS ec2 insatnce
         run: terraform plan --var-file=terraform.tfvars
         working-directory: terraform
       - name: Terraform Apply
         run: terraform apply --auto-approve
         working-directory: terraform
-          
-    
-  infrastructure-audit:
-    name: infrastructure-audit
-    runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.infrastructure-audit == 'yes' }}
-    
-    steps:
-<<<<<<< HEAD
-        - name: Checkout
-          uses: actions/checkout@v3
-    
-        - name: Install tfsec
-          run: |
-            wget -q $(wget -qO- https://api.github.com/repos/aquasecurity/tfsec/releases/latest | grep -o -E "https://[^\"]*linux_amd64.tar.gz") -O tfsec.tar.gz
-            tar -xzf tfsec.tar.gz
-            sudo install tfsec /usr/local/bin/
-          working-directory: terraform
-    
-        - name: Run tfsec
-          run: tfsec . --exclude-downloaded-modules --tfvars-file terraform.tfvars
-          working-directory: terraform
-          continue-on-error: true
-    
-        - name: Install Checkov
-          run: pip install checkov
-    
-        - name: Run Kubernetes YAMLS files Scan
-          run: |
-            checkov -d . --framework kubernetes --download-external-modules true
-          continue-on-error: true
-    
-        - name: Run Checkov IAC Scan
-          run: |
-            checkov -d . --framework terraform --download-external-modules true
-          working-directory: terraform
-          continue-on-error: true
-          
-    
+      - name: Execute kubeArmor deploy script
+        run: sh KubeArmor_deploy.sh  
+
       
   # zap_scan:
   #   name: OWASP-ZAP integration 
@@ -176,31 +83,4 @@ jobs:
   #         path: |
   #           report_html.html
   #           report_json.json
-=======
-    # Step 1: Check out the code from the repository
-    - name: Check out code
-      uses: actions/checkout@v2
 
-    # Step 2: Set up AWS credentials using secrets stored in GitHub
-    - name: Set up AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1 # Replace with your AWS region
-
-    # Step 3: Connect to EC2 instance via SSH and copy code
-    - name: Build & Deploy code on Ec2
-      env:
-          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          HOSTNAME: ${{secrets.HOST_NAME}}
-          USER_NAME: ${{secrets.USER_NAME}}
-      
-      run: |
-          echo "$PRIVATE_KEY" > private_key.pem && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USER_NAME}@${HOST_NAME}
-
-          # Now we have got the access of EC2 and we will start the deploy .
-          cd /home/ubuntu/ &&
-          sudo ls
->>>>>>> 54e21368ff691aa1f7349889f2b21db815b26382
