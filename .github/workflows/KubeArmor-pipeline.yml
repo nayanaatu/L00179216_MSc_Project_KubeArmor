@@ -18,22 +18,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v3
+    # Step 1: Check out the code from the repository
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    # Step 2: Set up AWS credentials using secrets stored in GitHub
+    - name: Set up AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
       with:
-        python-version: "3.10"
-    - name: Install dependencies
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1 # Replace with your AWS region
+
+    # Step 3: Connect to EC2 instance via SSH and copy code
+    - name: Copy code to EC2 instance
+      env:
+        EC2_PUBLIC_IP: ${{ secrets.EC2_PUBLIC_IP }}
+        SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
-      run: |
-        pytest
+        # Write the SSH private key to a temporary file
+        echo "$SSH_KEY" > private_key.pem
+        chmod 600 private_key.pem
+
+        # Copy code to EC2 instance
+        scp -i private_key.pem -o "StrictHostKeyChecking=no" -r $GITHUB_WORKSPACE/* ec2-user@${EC2_PUBLIC_IP}:/home/ec2-user/app
+
+        # Clean up
+        rm private_key.pem
