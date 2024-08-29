@@ -52,6 +52,8 @@ jobs:
       - name: Terraform Apply
         run: terraform apply --auto-approve
         working-directory: terraform
+      - name: Execute working dir command
+        run: pwd 
       - name: Execute kubeArmor deploy script
         run: sh KubeArmor_deploy.sh  
 
