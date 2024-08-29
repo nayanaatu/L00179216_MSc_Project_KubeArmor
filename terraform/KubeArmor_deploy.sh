@@ -35,6 +35,9 @@ echo "Unpack the downloaded KubeArmor package"
 sudo tar --no-overwrite-dir -C / -xzf kubearmor_1.4.1_linux-amd64.tar.gz
 # Daemon reload
 sudo systemctl daemon-reload
+sleep 3
+sudo systemctl start kubearmor
+sleep 2
 echo "======== KubeArmor installed ========="
 
 # Step 3: Install karmor CLI 
@@ -73,7 +76,7 @@ sudo systemctl daemon-reload
 
 # Step 7: Install locust
 echo " === Install locust ==="
-sudo apt install locust
+sudo apt install locust 
 sleep 2
 echo " ======== Installation and setup completed successfully. ======="
 
@@ -82,9 +85,12 @@ echo "=== Get the grafana password to login to Grafana dashboard === "
 kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 
 # Step 9: Write locust file to generate load - Ec2 instance IP and port hardcode, make it variable an dread from
-Ec2 instance to be considered in script enhancement
-echo " === Generate load on nginx server running in Kubernetes cluster ==="
-locust -f webpage.py --headless -u 15 -r 3 --run-time 30s --host="100.27.219.175:31903"
+#Ec2 instance to be considered in script enhancement
+echo "========= Kubearmor and all tools installed successfully =========="
+sudo systemctl status 
+echo "===== Deployment done successfully ============"
+#echo " === Generate load on nginx server running in Kubernetes cluster ==="
+#locust -f webpage.py --headless -u 15 -r 3 --run-time 30s --host="100.27.219.175:31903"
 
 
 
