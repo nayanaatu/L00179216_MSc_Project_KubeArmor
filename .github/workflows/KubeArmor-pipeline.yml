@@ -17,7 +17,7 @@ jobs:
     steps:
       # Checkout the code from the GitHub repository
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
   iac-build-and-deploy:
     runs-on: ubuntu-latest
@@ -27,7 +27,7 @@ jobs:
       target_url: ${{ steps.running-terraform-commands.outputs.target }}
     steps:
       - name: Checkout codes
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Configure AWS
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -36,7 +36,7 @@ jobs:
           aws-region: ${{secrets.AWS_REGION}}
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@v6
         with:
           terraform_version: "1.1.7"
       - name: Terraform Init, Format, Validate
