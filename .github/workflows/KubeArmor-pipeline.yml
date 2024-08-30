@@ -1,15 +1,11 @@
 # The name of the workflow.
 name: Build, Test, and Deploy code on Ec2 instance
-
 # Run the workflow when code is pushed to the main branch
 on:
   push:
     branches:
       - main
-
-
 # This is the workflow that is being run.
-
 jobs:
   build-test-and-deploy:
     # This is telling GitHub to run the workflow on the latest version of Ubuntu.
