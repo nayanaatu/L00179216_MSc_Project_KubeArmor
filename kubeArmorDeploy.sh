@@ -90,9 +90,13 @@ echo "========= Kubearmor and all tools installed successfully =========="
 sudo systemctl status kubearmor 
 echo "===== Deployment done successfully ============"
 # echo " === Generate load on nginx server running in Kubernetes cluster ==="
+<<<<<<< HEAD:kubeArmorDeploy.sh
 # The below command is executed manually  
 # locust -f webpage.py --headless -u 15 -r 3 --run-time 30s --host="100.27.219.175:31903"
 
 
 
 
+=======
+# locust -f webpage.py --headless -u 15 -r 3 --run-time 30s --host="100.27.219.175:31903"
+>>>>>>> 57412ffd8c2fa418142a07efe8d07b2dbd3d0b57:KubeArmor_deploy.sh

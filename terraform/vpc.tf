@@ -52,6 +52,10 @@ resource "aws_default_security_group" "default-sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 57412ffd8c2fa418142a07efe8d07b2dbd3d0b57
 
   ingress {
     from_port   = 9100
