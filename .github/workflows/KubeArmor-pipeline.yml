@@ -42,18 +42,16 @@ jobs:
             terraform validate -no-color
         working-directory: terraform
           
-      - name: Terraform Plan ro deploy AWS ec2 insatnce
+      - name: Terraform Plan to deploy AWS EC2 Instance and run shell script
         run: terraform plan --var-file=terraform.tfvars
         working-directory: terraform
       - name: Terraform Apply
         run: terraform apply --auto-approve
         working-directory: terraform
-      - name: Execute working dir command
-        run: pwd 
-      - name: Execute kubeArmor deploy script
+      
+      - name: Execute kubeArmor deploy script to install KubeArmor + performance script
         run: sh KubeArmor_deploy.sh  
 
-      
   # zap_scan:
   #   name: OWASP-ZAP integration 
   #   runs-on: ubuntu-latest
@@ -81,4 +79,48 @@ jobs:
   #         path: |
   #           report_html.html
   #           report_json.json
+  snyk_analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          
+# Snyk security scan step for web
+#      - name: Checkout repository
+#        uses: actions/checkout@v2
+
+#      - name: Install Snyk CLI
+#        run: npm install -g snyk
+
+#      - name: Snyk Security Scans
+#        run: snyk test --org=nayanaatu --project-name='reactapp-test'
+#        continue-on-error: true
+#        env:
+#          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+#        working-directory: terraform
+                
+#      - name: Snyk Monitor
+#        run: snyk monitor --org=nayanaatu --project-name='L00179216_MSc_Project_KubeArmor'
+#        env:
+#          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+#        working-directory: terraform
+                
+  # Snyk security scan step for Code Scanning
+
+#      - name: Run Snyk to check for vulnerabilities
+#        uses: snyk/actions/node@master
+#        continue-on-error: true
+#        with:
+#          args: ./WWA-backend-master --sarif-file-output=snyk.sarif
+#        env:
+#          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+#      - name: Upload SARIF to GitHub Security Center
+#        uses: github/codeql-action/upload-sarif@v3
+#        with:
+#          sarif_file: snyk.sarif
+#          category: 'Snyk OpenSource Unique Category'
 
