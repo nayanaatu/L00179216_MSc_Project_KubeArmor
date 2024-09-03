@@ -1,6 +1,6 @@
 # The name of the workflow.
 name: Build, Test, and Deploy code on Ec2 instance
-# Run the workflow when code is pushed to the main branch
+# Run the workflow when code is pushed to main branch
 on:
   push:
     branches:
