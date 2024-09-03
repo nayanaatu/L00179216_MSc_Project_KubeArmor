@@ -52,9 +52,7 @@ jobs:
       - name: Execute kubeArmor deploy script to install KubeArmor + performance script
         run: sh KubeArmor_deploy.sh  
 
-<<<<<<< HEAD
-      
-=======
+
   # zap_scan:
   #   name: OWASP-ZAP integration 
   #   runs-on: ubuntu-latest
@@ -82,15 +80,15 @@ jobs:
   #         path: |
   #           report_html.html
   #           report_json.json
-  snyk_analysis:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
+  # snyk_analysis:
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - name: Checkout code
+  #      uses: actions/checkout@v2
+  #    - name: Set up Node.js
+  #      uses: actions/setup-node@v3
+  #      with:
+  #        node-version: '20'
           
 # Snyk security scan step for web
 #      - name: Checkout repository
@@ -126,5 +124,5 @@ jobs:
 #        with:
 #          sarif_file: snyk.sarif
 #          category: 'Snyk OpenSource Unique Category'
->>>>>>> 57412ffd8c2fa418142a07efe8d07b2dbd3d0b57
+
 
