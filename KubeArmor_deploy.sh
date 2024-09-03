@@ -3,25 +3,16 @@
 # This script to deploy KubeArmor and karmor CLI
 # Installs Locust, prometheus and grafana 
 
-# Function to check if a command exists
-command_exists() {
-    command -v "$1" >/dev/null 2>&1
-}
 
 # Step 1: Install Helm if it's not already installed
-if ! command_exists helm; then
-    echo "Helm is not installed. Installing Helm."
-    snap install helm --classic
-else
-    echo "Helm is already exists."
-fi
+sudo su
+snap install helm --classic
 
 # Export Kubeconfig
 export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 
 # Step 2: Add the KubeArmor Helmchart repository and install KubeArmor
 echo " === Adding KubeArmor Helm repository ==="
-sudo su
 helm repo add kubearmor https://kubearmor.github.io/charts
 
 echo " === Updating Helm repositories ==="
