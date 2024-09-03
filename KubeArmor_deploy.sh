@@ -21,6 +21,7 @@ export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 
 # Step 2: Add the KubeArmor Helmchart repository and install KubeArmor
 echo " === Adding KubeArmor Helm repository ==="
+sudo su
 helm repo add kubearmor https://kubearmor.github.io/charts
 
 echo " === Updating Helm repositories ==="
@@ -76,7 +77,7 @@ sudo systemctl daemon-reload
 
 # Step 7: Install locust
 echo " === Install locust ==="
-sudo apt install locust 
+sudo pip3 install locust 
 sleep 2
 echo " ======== Installation and setup completed successfully. ======="
 
@@ -90,13 +91,6 @@ echo "========= Kubearmor and all tools installed successfully =========="
 sudo systemctl status kubearmor 
 echo "===== Deployment done successfully ============"
 # echo " === Generate load on nginx server running in Kubernetes cluster ==="
-<<<<<<< HEAD:kubeArmorDeploy.sh
 # The below command is executed manually  
 # locust -f webpage.py --headless -u 15 -r 3 --run-time 30s --host="100.27.219.175:31903"
 
-
-
-
-=======
-# locust -f webpage.py --headless -u 15 -r 3 --run-time 30s --host="100.27.219.175:31903"
->>>>>>> 57412ffd8c2fa418142a07efe8d07b2dbd3d0b57:KubeArmor_deploy.sh
