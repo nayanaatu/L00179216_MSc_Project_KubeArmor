@@ -48,9 +48,14 @@ jobs:
       - name: Terraform Apply
         run: terraform apply --auto-approve
         working-directory: terraform
-      
+      - name: chnage to root directoy
+        run: sudo su
+      - name: pppppppppppresetn working dir
+        run: pwd 
       - name: Execute kubeArmor deploy script to install KubeArmor + performance script
-        run: sh KubeArmor_deploy.sh  
+        run: scp KubeArmor_deploy.sh /root/KubeArmor_deploy.sh  
+      - name: execute kubearmor_file
+        run: sh KubeArmor.sh
 
 
   # zap_scan:
