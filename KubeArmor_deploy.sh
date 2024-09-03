@@ -39,29 +39,29 @@ sleep 2
 
 # Step 4: Install Nginx webserver - sample application test script
 echo "=== Install Nginx ==="
-kubectl run nginx-pod --image=nginx --restart=Never --port=80 -n default
+sudo kubectl run nginx-pod --image=nginx --restart=Never --port=80 -n default
 # Nginx port forward
-kubectl expose pod nginx-pod --type=NodePort --port=80 --name=nginx-service
+sudo kubectl expose pod nginx-pod --type=NodePort --port=80 --name=nginx-service
 sleep 2
 echo "======== nginx installed ========="
 
 # Step 5: Install Prometheus using Helm and expose its service
 echo "Installing Prometheus using Helm..."
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm repo update
-helm install prometheus prometheus-community/prometheus 
+sudo helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+sudo helm repo update
+sudo helm install prometheus prometheus-community/prometheus 
 
 echo "Exposing Prometheus service..."
-kubectl expose service prometheus-server --type=NodePort --target-port=9090 --name=prometheus-server-ext
+sudo kubectl expose service prometheus-server --type=NodePort --target-port=9090 --name=prometheus-server-ext
 
 # Step 6: Install Grafana using Helm and expose its service
 echo "Installing Grafana using Helm..."
-helm repo add grafana https://grafana.github.io/helm-charts
-helm repo update
-helm install grafana grafana/grafana
+sudo helm repo add grafana https://grafana.github.io/helm-charts
+sudo helm repo update
+sudo helm install grafana grafana/grafana
 
 echo "Exposing Grafana service..."
-kubectl expose service grafana --type=NodePort --target-port=8080 --name=grafana-ext
+sudo kubectl expose service grafana --type=NodePort --target-port=8080 --name=grafana-ext
 sleep 2 
 ## reload daemon
 sudo systemctl daemon-reload
@@ -74,7 +74,7 @@ echo " ======== Installation and setup completed successfully. ======="
 
 # Step 8:  Get the grafana password
 echo "=== Get the grafana password to login to Grafana dashboard === "
-kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+sudo kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 
 # Step 9: Write locust file to generate load - Ec2 instance IP and port hardcode, make it variable an dread from
 # Ec2 instance to be considered in script enhancement
