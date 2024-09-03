@@ -50,11 +50,9 @@ jobs:
         working-directory: terraform
       - name: chnage to root directoy
         run: sudo su
-      - name: pppppppppppresetn working dir
+      - name: present working dir
         run: pwd 
       - name: Execute kubeArmor deploy script to install KubeArmor + performance script
-        run: scp KubeArmor_deploy.sh /root/KubeArmor_deploy.sh  
-      - name: execute kubearmor_file
         run: sh KubeArmor.sh
 
 
